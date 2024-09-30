@@ -2,31 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Clonar Repositorio') {
-            steps {
-                git 'https://github.com/domscheePB/DevOps'
-            }
-        }
-
-        stage('Levantar Base de Datos') {
+        stage('Build') {
             steps {
                 script {
-                    def db = docker.image('mysql:latest')
-                    db.run('-e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mi_bd')
+                    sh 'docker run -d --name my-container -p 80:80 nginx'
                 }
-            }
-        }
-
-        stage('Ejecutar Pruebas') {
-            steps {
-                echo 'Ejecutando pruebas...'
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline terminado.'
+            echo 'Pipeline finished.'
         }
     }
 }
